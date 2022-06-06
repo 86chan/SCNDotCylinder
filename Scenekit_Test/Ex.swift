@@ -51,6 +51,12 @@ extension ViewController {
 }
 
 extension SCNCylinder {
+    /// 点線状のシリンダーを生成
+    /// - Parameters:
+    ///   - radius: 半径
+    ///   - height: 長さ
+    ///   - color1: メインカラー
+    ///   - color2: サブカラー
     convenience init(radius: Double, height: Double, color1: UIColor, color2: UIColor) {
         self.init(radius: radius, height: height)
         if let _image = makeTwinImage(color1: color1, color2: color2) {
@@ -61,6 +67,33 @@ extension SCNCylinder {
         }
     }
     
+    /// 点線状にする
+    /// - Parameters:
+    ///   - color1: メインカラー
+    ///   - color2: サブカラー
+    public func dotCylinder(color1: UIColor, color2: UIColor) {
+        if let _image = makeTwinImage(color1: color1, color2: color2) {
+            let _radialMat = toMaterial(image: _image)
+            let _othMat = SCNMaterial()
+            _othMat.diffuse.contents = color1
+            self.materials = [_radialMat, _othMat, _othMat]
+        }
+    }
+    
+    /// 単色にする
+    /// - Parameters:
+    ///   - color: 色
+    public func singleColorCylinder(color: UIColor) {
+        let _mat = SCNMaterial()
+        _mat.diffuse.contents = color
+        self.materials = [_mat, _mat, _mat]
+    }
+    
+    /// 長さに合わせた２色混合の画像を生成
+    /// - Parameters:
+    ///   - color1: メインカラー
+    ///   - color2: サブカラー
+    /// - Returns: 画像
     private func makeTwinImage(color1: UIColor, color2: UIColor) -> UIImage? {
         let _size = CGSize(width: 1, height: (self.height / 2 * 100))
         /// １つ目の画像
